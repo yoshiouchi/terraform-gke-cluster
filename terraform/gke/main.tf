@@ -1,11 +1,12 @@
 provider "google" {
   project = var.project_id
   region  = var.region
+  zone    = var.zone
 }
 
 resource "google_container_cluster" "primary" {
   name     = var.cluster_name
-  location = var.region
+  location = var.zone
 
   remove_default_node_pool = true
   initial_node_count       = 1
@@ -24,3 +25,9 @@ resource "google_container_cluster" "primary" {
   }
 }
 
+terraform {
+  backend "gcs" {
+    bucket = "your-terraform-state-bucket"
+    prefix = "terraform/state"
+  }
+}
