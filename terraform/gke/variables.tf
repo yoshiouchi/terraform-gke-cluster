@@ -43,3 +43,9 @@ resource "google_container_cluster" "primary" {
     machine_type = "e2-medium"
   }
 }
+
+variable "credentials_file" {
+  type        = string
+  description = "Path to the GCP credentials JSON file"
+}
+
