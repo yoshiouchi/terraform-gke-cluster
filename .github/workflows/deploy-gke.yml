@@ -20,8 +20,10 @@ jobs:
       uses: hashicorp/setup-terraform@v2
 
     - name: Terraform Init
+      working-directory: terraform/gke
       run: terraform init
 
     - name: Terraform Apply
+      working-directory: terraform/gke
       run: terraform apply -auto-approve
 
