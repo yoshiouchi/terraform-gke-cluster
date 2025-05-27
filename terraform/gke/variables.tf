@@ -33,3 +33,13 @@ variable "node_count" {
   default     = 2
 }
 
+resource "google_container_cluster" "primary" {
+  name     = "my-gke-cluster"
+  location = var.zone  # use zone for zonal cluster, or var.region for regional
+
+  initial_node_count = 2
+
+  node_config {
+    machine_type = "e2-medium"
+  }
+}
