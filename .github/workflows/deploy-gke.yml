@@ -1,29 +1,35 @@
-name: Deploy GKE Cluster
+name: Terraform GKE Deployment
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:  # Enables manual trigger from GitHub Actions UI
 
 jobs:
   terraform:
+    name: 'Terraform Apply'
     runs-on: ubuntu-latest
-
-    env:
-      GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+    defaults:
+      run:
+        working-directory: terraform/gke  # Points to your Terraform directory
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6
 
-    - name: Terraform Init
-      working-directory: terraform/gke
-      run: terraform init
+      - name: Terraform Init
+        run: terraform init
 
-    - name: Terraform Apply
-      working-directory: terraform/gke
-      run: terraform apply -auto-approve
+      - name: Terraform Validate
+        run: terraform validate
 
+      - name: Terraform Plan
+        run: terraform plan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
